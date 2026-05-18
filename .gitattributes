@@ -1,0 +1,5 @@
+# Bỏ qua thư mục facenet khỏi phần tính toán ngôn ngữ dự án
+app/src/main/assets/facenet-master/**/* linguist-vendored
+
+# Ép định dạng nhận diện ngôn ngữ chính cho các file Kotlin (nếu cần chắc chắn)
+*.kt linguist-detectable=true
