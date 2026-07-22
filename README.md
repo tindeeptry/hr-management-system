@@ -46,3 +46,15 @@ Dự án được xây dựng nhằm tối ưu hóa quy trình quản lý nhân 
 ## 🚀 Hướng dẫn Cài đặt 
 ## 📥 Tải ứng dụng (Android APK)
 * 🚀 **Phiên bản mới nhất (v1.0):** [Tải ngay file HrApp.apk](https://github.com/tindeeptry/hr-management-system/releases/download/v1.0/HrApp.apk)
+* * **Tài khoản Admin / Manager:**
+  * **Email / Tài khoản:** `admin@hrapp.com`
+  * **Mật khẩu:** `123456`
+* **Tài khoản Nhân viên (User):**
+  * **Email / Tài khoản:** `nv004@hrapp.com` 
+  * **Mật khẩu:** `123456`
+ 
+## 💡 Lưu ý Vận hành & Tài khoản Trải nghiệm
+
+> **⚠️ Lưu ý về Server:** 
+> Do Backend được triển khai trên hạ tầng miễn phí (Render Platform), hệ thống sẽ tự động chuyển sang trạng thái **"ngủ đông"** nếu không có lưu lượng truy cập sau **15 phút**. 
+> Khi mở lại ứng dụng sau thời gian này, thao tác phản hồi đầu tiên (như Đăng nhập) có thể **mất khoảng 1 phút** để máy chủ khởi động lại. Cảm ơn bạn đã kiên nhẫn!
