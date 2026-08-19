@@ -1,5 +1,7 @@
 package com.example.hrapp.presentation.admin.attendance
+
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,8 +20,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.hrapp.data.remote.model.ChamCongResponse
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,11 +37,16 @@ fun AttendanceListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var hienDialogChamCong by remember { mutableStateOf(false) }
+    var hienDatePicker by remember { mutableStateOf(false) }
     var ngayChon by remember {
         mutableStateOf(
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         )
     }
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = System.currentTimeMillis()
+    )
 
     LaunchedEffect(Unit) {
         viewModel.loadDanhSachNhanVien()
@@ -51,6 +64,39 @@ fun AttendanceListScreen(
                 }
             }
         )
+    }
+
+    if (hienDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { hienDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val ngay = Instant.ofEpochMilli(millis)
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate()
+                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                            ngayChon = ngay
+                            viewModel.loadTheoNgay(ngay)
+                        }
+                        hienDatePicker = false
+                    }
+                ) {
+                    Text("Chọn", color = Color(0xFF1565C0))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { hienDatePicker = false }) {
+                    Text("Hủy")
+                }
+            }
+        ) {
+            DatePicker(
+                state = datePickerState,
+                showModeToggle = true
+            )
+        }
     }
 
     if (hienDialogChamCong) {
@@ -115,7 +161,8 @@ fun AttendanceListScreen(
             Card(
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(2.dp)
+                elevation = CardDefaults.cardElevation(2.dp),
+                onClick = { hienDatePicker = true }
             ) {
                 Row(
                     modifier = Modifier
@@ -138,17 +185,31 @@ fun AttendanceListScreen(
                         )
                     }
 
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = ngayChon,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            color = Color(0xFF1565C0)
-                        )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.clickable { hienDatePicker = true }  // ✅ thêm clickable
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.CalendarMonth,
+                                contentDescription = null,
+                                tint = Color(0xFF1565C0),
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Text(
+                                text = ngayChon,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                color = Color(0xFF1565C0)
+                            )
+                        }
                         Text(
                             text = if (ngayChon == LocalDate.now()
                                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                                "Hôm nay" else "",
+                                "Hôm nay" else "Nhấn để chọn ngày",
                             fontSize = 11.sp,
                             color = Color(0xFF757575)
                         )

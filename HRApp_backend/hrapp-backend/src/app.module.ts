@@ -14,13 +14,18 @@ import { KhuonMatModule } from './khuon_mat/khuon-mat.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST || 'tokaido.proxy.rlwy.net',
-      port: parseInt(process.env.DB_PORT || '10533'),
-      username: process.env.DB_USERNAME || 'root',
-      password: process.env.DB_PASSWORD || 'pJqhsfQlxIrLpiuwjsuPFTgBbpmDDCQx',
-      database: process.env.DB_DATABASE || 'hrapp', // ✨ Đổi mặc định thành hrapp luôn cho chắc
+      host: process.env.DB_HOST || 'gateway01.ap-southeast-1.prod.aws.tidbcloud.com',
+      port: parseInt(process.env.DB_PORT || '4000'),
+      username: process.env.DB_USERNAME || '3jcoUEX7E6ee4VB.root',
+      password: process.env.DB_PASSWORD || 'yi6nPGdAEla8QgWp',
+      database: process.env.DB_DATABASE || 'test', 
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false,
+      synchronize: true,
+
+      ssl: {
+        rejectUnauthorized: true,
+        minVersion: 'TLSv1.2',
+      },
       
       // 🔥 THÊM ĐOẠN NÀY ĐỂ FIX ECONNRESET KHÔNG LO SẬP KẾT NỐI:
       extra: {
@@ -28,7 +33,11 @@ import { KhuonMatModule } from './khuon_mat/khuon-mat.module';
         waitForConnections: true,
         queueLimit: 0,
         keepAliveInitialDelay: 10000, // Tự động gửi gói tin giữ kết nối sau 10s
-        enableKeepAlive: true
+        enableKeepAlive: true,
+        ssl: {
+          rejectUnauthorized: true,
+          minVersion: 'TLSv1.2',
+        },
       },
       connectTimeout: 20000,          // Tăng thời gian chờ kết nối lên 20s
       retryAttempts: 5,               // Tự động thử lại 5 lần nếu mất kết nối
